@@ -55,6 +55,8 @@ python3 wbctl.py --dry-run add           # 只打印，不写
 
 **`key_env` 必须在每个 profile 的 `.env` 里都真实存在。** `profile_env_scope()` 让每个 bot 只读自己的 `.env`；只在全局 `.env` 有的键，对其他 bot 解析为空——切号不报错，日志仍显示走主号，这就是「切了没反应」最常见的形态。往各 profile 的 `.env` 补新凭据属于凭据落盘，需要单独授权，不能当顺手修复。
 
+**换 token 之后 `git push` 报 `Invalid username or token`，不是 token 坏了。** macOS 默认 `credential.helper=osxkeychain`，它会用缓存里的旧凭据、绕过 `GIT_ASKPASS`；而 API 调用走 header、用的是新 token，于是出现「API 能开 PR、git 推不上去」的分裂。判断依据很干净：`POST /git/refs` 返回 201 说明 `Contents:write` 没问题，问题在认证层。推送时加 `-c credential.helper=` 清空 helper 才能保证用的是文件里那把。
+
 **模型列表必须来自该账号自己的 `/v1/models`。** 账号之间目录不同：照抄主号会让选择器列出这个号没有的模型（实测三号没有 `hy3`、`hy3-x`、`hy4free`，独有 `hy4flash`、`hy4flash-free`），选中必然失败。装饰后缀 `· x0.29` 由 bridge 的 `stripDecor` 去掉，比对要用 wire id。
 
 **provider 块必须是 `providers:` 的 2 空格子级。** 写成 4 空格会变成上一个 provider 的子键：YAML 解析通过、lint 通过、`hermes config get` 回「Config key not set」。验证要查路径而非语法——`yaml.safe_load` 之后走 `d['providers'].keys()`。
