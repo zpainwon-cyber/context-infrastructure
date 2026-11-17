@@ -1,0 +1,6 @@
+name: workbuddy-bridge
+version: 1.0.0
+description: "One-command WorkBuddy multi-account bridge; portable across Hermes installs."
+pip_dependencies: []
+requires_env: []
+hooks: []

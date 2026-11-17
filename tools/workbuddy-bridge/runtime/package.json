@@ -1,0 +1,8 @@
+{
+  "name": "workbuddy-hermes-shim",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "dsh-connect-workbuddy": "^5.18.1"
+  }
+}
